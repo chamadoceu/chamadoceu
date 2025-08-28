@@ -3,49 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <title>Login com Google</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
-</head>
-<body>
-  <h2>Login</h2>
-  <button id="login-google">Entrar com Google</button>
-
   <script type="module">
+    // Importando SDKs do Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } 
+      from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-    // 🔑 Config do seu projeto Firebase (cole aqui o seu)
-const firebaseConfig = {
-  apiKey: "AIzaSyBSj74mcJU3OO2_ZuIg-PtCKgRfyd8QCXo",
-  authDomain: "chamadoceu-a8f24.firebaseapp.com",
-  projectId: "chamadoceu-a8f24",
-  storageBucket: "chamadoceu-a8f24.firebasestorage.app",
-  messagingSenderId: "84604132782",
-  appId: "1:84604132782:web:f863285b02c5f2441c7c3f",
-  measurementId: "G-WB6FXH08LY"
-};
+    // 🔑 Configuração do seu projeto Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBSj74mcJU3OO2_ZuIg-PtCKgRfyd8QCXo",
+      authDomain: "chamadoceu-a8f24.firebaseapp.com",
+      projectId: "chamadoceu-a8f24",
+      storageBucket: "chamadoceu-a8f24.firebasestorage.app",
+      messagingSenderId: "84604132782",
+      appId: "1:84604132782:web:f863285b02c5f2441c7c3f",
+      measurementId: "G-WB6FXH08LY"
+    };
 
-    // Inicializar Firebase
+    // Inicializa Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // Botão login Google
-    document.getElementById("login-google").onclick = async () => {
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        console.log("Usuário logado:", user.displayName);
+    // Quando clicar no botão de login
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("login-google").onclick = async () => {
+        try {
+          const result = await signInWithPopup(auth, provider);
+          const user = result.user;
+          console.log("Usuário logado:", user.displayName);
 
-        // salva login e vai para index.html
-        localStorage.setItem("logado", "true");
-        window.location.href = "index.html";
-      } catch (err) {
-        alert("Erro no login: " + err.message);
-      }
-    };
+          // Guarda login no navegador
+          localStorage.setItem("logado", "true");
+          localStorage.setItem("usuario", user.displayName);
+
+          // Vai para o sistema
+          window.location.href = "index.html";
+        } catch (err) {
+          alert("Erro no login: " + err.message);
+        }
+      };
+    });
   </script>
+</head>
+<body>
+  <div style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;">
+    <h2>Bem-vindo</h2>
+    <button id="login-google" style="padding:10px 20px;font-size:16px;">
+      🔐 Entrar com Google
+    </button>
+  </div>
 </body>
 </html>
-
-
