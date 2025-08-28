@@ -2,51 +2,47 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Login</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      display: flex; justify-content: center; align-items: center;
-      height: 100vh; background: #f4f4f9; font-family: sans-serif;
-    }
-    .login-box {
-      background: white; padding: 2rem; border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      width: 300px; text-align: center;
-    }
-    .login-box input {
-      width: 100%; padding: 10px; margin: 8px 0;
-      border: 1px solid #ccc; border-radius: 8px;
-    }
-    .login-box button {
-      width: 100%; padding: 10px; margin-top: 12px;
-      background: #4CAF50; color: white; border: none; border-radius: 8px;
-      cursor: pointer; font-weight: bold;
-    }
-    .login-box button:hover { background: #45a049; }
-  </style>
+  <title>Login com Google</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
 </head>
 <body>
-  <div class="login-box">
-    <h2>Login</h2>
-    <input type="text" id="user" placeholder="Usuário">
-    <input type="password" id="pass" placeholder="Senha">
-    <button onclick="login()">Entrar</button>
-  </div>
+  <h2>Login</h2>
+  <button id="login-google">Entrar com Google</button>
 
-  <script>
-    function login(){
-      const u = document.getElementById('user').value;
-      const p = document.getElementById('pass').value;
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-      // usuário e senha fixos (exemplo)
-      if(u === "admin" && p === "1234"){
-        localStorage.setItem("logado", "true"); // salva login
-        window.location.href = "index.html";    // redireciona
-      } else {
-        alert("Usuário ou senha inválidos");
+    // 🔑 Config do seu projeto Firebase (cole aqui o seu)
+    const firebaseConfig = {
+      apiKey: "SUA-CHAVE",
+      authDomain: "SEU-PROJETO.firebaseapp.com",
+      projectId: "SEU-PROJETO",
+      storageBucket: "SEU-PROJETO.appspot.com",
+      messagingSenderId: "NUMERO",
+      appId: "APP_ID"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // Botão login Google
+    document.getElementById("login-google").onclick = async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        console.log("Usuário logado:", user.displayName);
+
+        // salva login e vai para index.html
+        localStorage.setItem("logado", "true");
+        window.location.href = "index.html";
+      } catch (err) {
+        alert("Erro no login: " + err.message);
       }
-    }
+    };
   </script>
 </body>
 </html>
