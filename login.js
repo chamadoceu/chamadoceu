@@ -9,8 +9,9 @@ document.getElementById("btn-login").addEventListener("click", async () => {
 
   try {
     await auth.signInWithEmailAndPassword(email, senha);
-    window.location.href = "index.html"; // sucesso → vai pro sistema
+    window.location.href = "dashboard.html"; // sucesso → vai pro sistema
   } catch (e) {
     erro.textContent = "⚠️ Usuário ou senha inválidos.";
   }
 });
+
