@@ -13,6 +13,14 @@
     window.location.href = "login-firebase.html";
   }
 </script>
+	<button onclick="logout()">Sair</button>
+<script>
+  function logout(){
+    localStorage.removeItem("logado");
+    localStorage.removeItem("usuario");
+    window.location.href = "login-firebase.html";
+  }
+</script>
   <div class="topbar">
     <div class="brand"><img class="logo" src="https://i.imgur.com/Xy828hk.jpeg" alt="Logo"> Sistema de Gestão - Chama do Céu </div>
     <div id="dash-actions" >
