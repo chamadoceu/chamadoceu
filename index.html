@@ -45,7 +45,7 @@
       try {
         await auth.signInWithEmailAndPassword(email, senha);
         alert("✅ Login realizado!");
-        window.location.href = "app.html"; // redireciona pro sistema
+        window.location.href = "dashboard.html"; // redireciona pro sistema
       } catch (e) {
         console.error("❌ Erro:", e);
         erro.textContent = "⚠️ " + e.message;
@@ -54,3 +54,4 @@
   </script>
 </body>
 </html>
+
