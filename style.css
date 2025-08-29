@@ -308,20 +308,14 @@ th.text-right, td.text-right { text-align: right; }
 
 
 /* 15) Botões "Cancelar Edição" começam escondidos (Receitas e Insumos) */
-#btn-rcp-cancelar,
-#btn-ins-cancelar {
-  display: none;
-}
+/* Removido: o JS controla exibição com a classe .hide */
 
 /* 16) Sistema de visibilidade usando classes show/hide */
 .hide { display: none !important; }
 .show { display: inline-block !important; }
 
 /* Botões Cancelar começam escondidos */
-#btn-rcp-cancelar,
-#btn-ins-cancelar {
-  display: none;
-}
+/* Removido: o JS controla exibição com a classe .hide */
 /* === Login Page (igual ao dashboard) === */
 body.center {
   min-height: 100vh;
