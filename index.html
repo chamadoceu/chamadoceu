@@ -3,36 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Chama do Céu</title>
-  <link rel="stylesheet" href="style1.css">
+  <title>Login - Teste Firebase</title>
 </head>
 <body>
-  <div class="login-container">
-    <div class="login-box">
-      <h2>🔑 Acesso ao Sistema</h2>
-      <div class="field">
-        <label>Email</label>
-        <input type="email" id="login-email" placeholder="exemplo@email.com">
-      </div>
-      <div class="field">
-        <label>Senha</label>
-        <input type="password" id="login-senha" placeholder="Digite sua senha">
-      </div>
-      <div class="actions">
-        <button id="btn-login" class="btn primary">Entrar</button>
-      </div>
-      <p id="login-erro" class="error"></p>
-    </div>
-  </div>
+  <h2>🔑 Teste de Login</h2>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <label>Email:</label>
+  <input type="email" id="login-email" placeholder="email"><br><br>
+
+  <label>Senha:</label>
+  <input type="password" id="login-senha" placeholder="senha"><br><br>
+
+  <button id="btn-login">Entrar</button>
+
+  <p id="login-erro" style="color:red"></p>
+
+  <!-- Firebase SDK compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
   <!-- Configuração Firebase -->
-  <script src="firebase-config.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBSj74mcJU3OO2_ZuIg-PtCKgRfyd8QCXo",
+      authDomain: "chamadoceu-a8f24.firebaseapp.com",
+      projectId: "chamadoceu-a8f24",
+      storageBucket: "chamadoceu-a8f24.appspot.com",
+      messagingSenderId: "84604132782",
+      appId: "1:84604132782:web:f863285b02c5f2441c7c3f",
+      measurementId: "G-WB6FXH08LY"
+    };
 
-  <!-- Script de login -->
-  <script src="login.js"></script>
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    document.getElementById("btn-login").addEventListener("click", async () => {
+      const email = document.getElementById("login-email").value;
+      const senha = document.getElementById("login-senha").value;
+      const erro = document.getElementById("login-erro");
+
+      try {
+        await auth.signInWithEmailAndPassword(email, senha);
+        alert("✅ Login realizado!");
+        window.location.href = "app.html"; // redireciona pro sistema
+      } catch (e) {
+        console.error("❌ Erro:", e);
+        erro.textContent = "⚠️ " + e.message;
+      }
+    });
+  </script>
 </body>
 </html>
