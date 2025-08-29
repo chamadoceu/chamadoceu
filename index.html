@@ -4,19 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Teste Firebase</title>
+  <link rel="stylesheet" href="style1.css">
 </head>
-<body>
-  <h2>🔑 Teste de Login</h2>
+<body class="center">
 
-  <label>Email:</label>
-  <input type="email" id="login-email" placeholder="email"><br><br>
+  <div class="login-card panel">
+    <h2 class="panel-header">🔑 Acessar Conta</h2>
 
-  <label>Senha:</label>
-  <input type="password" id="login-senha" placeholder="senha"><br><br>
+    <div class="grid">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="Digite seu email">
+      </div>
 
-  <button id="btn-login">Entrar</button>
+      <div class="field">
+        <label for="login-senha">Senha</label>
+        <input type="password" id="login-senha" placeholder="Digite sua senha">
+      </div>
+    </div>
 
-  <p id="login-erro" style="color:red"></p>
+    <p id="login-erro" class="text-muted" style="color:var(--danger); margin-top:var(--space-2)"></p>
+
+    <div class="actions">
+      <button class="btn primary" id="btn-login">Entrar</button>
+      <button class="btn ghost">Esqueci a senha</button>
+    </div>
+  </div>
 
   <!-- Firebase SDK compat -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -44,7 +57,6 @@
 
       try {
         await auth.signInWithEmailAndPassword(email, senha);
-        alert("✅ Login realizado!");
         window.location.href = "dashboard.html"; // redireciona pro sistema
       } catch (e) {
         console.error("❌ Erro:", e);
@@ -54,4 +66,3 @@
   </script>
 </body>
 </html>
-
