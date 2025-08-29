@@ -322,3 +322,27 @@ th.text-right, td.text-right { text-align: right; }
 #btn-ins-cancelar {
   display: none;
 }
+/* === Login Page === */
+body.center {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  padding: var(--space-6);
+}
+
+.login-card {
+  width: 340px;
+  text-align: center;
+  padding: var(--space-6);
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-3);
+}
+
+.login-card h2 {
+  margin-bottom: var(--space-4);
+}
