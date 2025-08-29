@@ -353,7 +353,6 @@ body.center {
   background: #fff;
   padding: 6px;
   margin-bottom: var(--space-3);
-  box-shadow: 0 0 0 4px var(--brand), var(--shadow-glow);
 }
 
 /* Título e subtítulo */
