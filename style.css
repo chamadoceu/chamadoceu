@@ -333,6 +333,7 @@ th.text-right, td.text-right { text-align: right; }
 body.center {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background: var(--bg); /* fundo igual ao dash */
@@ -341,6 +342,7 @@ body.center {
 
 /* Caixa de login */
 .login-card {
+  margin: auto; /* garante centralização sem empurrar o footer */
   width: 360px;
   text-align: center;
   padding: var(--space-6);
@@ -448,4 +450,12 @@ table{ min-width: 600px; }
   padding: var(--space-3);
   padding-top: 0;   /* evita espaçamento duplicado com o título */
   height: 260px;
+}
+
+
+/* Footer na página de login (index) */
+body.center footer {
+  background: transparent;   /* sem fundo */
+  border-top: none;          /* remove a linha superior */
+  color: var(--muted);       /* texto mais discreto */
 }
