@@ -39,56 +39,12 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
   <!-- Configuração Firebase -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBSj74mcJU3OO2_ZuIg-PtCKgRfyd8QCXo",
-      authDomain: "chamadoceu-a8f24.firebaseapp.com",
-      projectId: "chamadoceu-a8f24",
-      storageBucket: "chamadoceu-a8f24.appspot.com",
-      messagingSenderId: "84604132782",
-      appId: "1:84604132782:web:f863285b02c5f2441c7c3f",
-      measurementId: "G-WB6FXH08LY"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    document.getElementById("btn-login").addEventListener("click", async () => {
-      const email = document.getElementById("login-email").value.trim();
-      const senha = document.getElementById("login-senha").value;
-      const erro = document.getElementById("login-erro");
-
-      erro.textContent = "";
-
-      if (!email || !senha) {
-        erro.textContent = "⚠️ Preencha email e senha.";
-        return;
-      }
-
-      try {
-        await auth.signInWithEmailAndPassword(email, senha);
-        window.location.href = "dashboard.html";
-      } catch (e) {
-        console.error("❌ Erro Firebase:", e);
-        let msg = "Erro desconhecido. Tente novamente.";
-        switch (e.code) {
-          case "auth/missing-password":
-            msg = "⚠️ Por favor, informe sua senha.";
-            break;
-          case "auth/invalid-credential":
-            msg = "⚠️ Usuário ou senha inválidos.";
-            break;
-          case "auth/user-not-found":
-            msg = "⚠️ Usuário não encontrado.";
-            break;
-          case "auth/invalid-email":
-            msg = "⚠️ Email inválido.";
-            break;
-        }
-        erro.textContent = msg;
-      }
-    });
-  </script>
+  <script src="firebase-config.js"></script>
+  <script src="login.js"></script>
+<footer>
+  <p>© 2025 Chama do Céu - Todos os direitos reservados |
+     <a href="privacidade.html">Política de Privacidade</a>
+  </p>
+</footer>
 </body>
 </html>
-
