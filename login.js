@@ -1,17 +1,14 @@
-const auth = firebase.auth();
+console.log("✅ login.js carregado");
 
-document.getElementById("btn-login").addEventListener("click", async () => {
-  const email = document.getElementById("login-email").value;
-  const senha = document.getElementById("login-senha").value;
-  const erro = document.getElementById("login-erro");
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("✅ DOM carregado");
 
-  erro.textContent = "";
+  const btn = document.getElementById("btn-login");
+  console.log("🔎 Botão encontrado?", btn);
 
-  try {
-    await auth.signInWithEmailAndPassword(email, senha);
-    window.location.href = "dashboard.html"; // sucesso → vai pro sistema
-  } catch (e) {
-    erro.textContent = "⚠️ Usuário ou senha inválidos.";
+  if (btn) {
+    btn.addEventListener("click", () => {
+      console.log("👉 Clique detectado!");
+    });
   }
 });
-
