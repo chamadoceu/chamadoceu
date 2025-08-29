@@ -322,28 +322,29 @@ th.text-right, td.text-right { text-align: right; }
 #btn-ins-cancelar {
   display: none;
 }
-/* === Login Page (estilo igual ao dashboard) === */
+/* === Login Page (igual ao dashboard) === */
 body.center {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  background: var(--bg); /* fundo igual ao dash */
   padding: var(--space-6);
 }
 
+/* Caixa de login */
 .login-card {
   width: 360px;
   text-align: center;
   padding: var(--space-6);
-  background: var(--panel);
-  backdrop-filter: blur(18px);
+  background: #fff; /* sólido, destaca no fundo claro */
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow-3);
   animation: fadeIn .6s ease;
 }
 
+/* Logo */
 .login-logo {
   width: 84px;
   height: 84px;
@@ -355,6 +356,7 @@ body.center {
   box-shadow: 0 0 0 4px var(--brand), var(--shadow-glow);
 }
 
+/* Título e subtítulo */
 .login-card h2 {
   margin-top: var(--space-2);
   margin-bottom: var(--space-1);
@@ -366,6 +368,7 @@ body.center {
   margin-bottom: var(--space-4);
 }
 
+/* Mensagens de erro */
 .erro-msg {
   margin-top: var(--space-2);
   font-size: var(--font-sm);
