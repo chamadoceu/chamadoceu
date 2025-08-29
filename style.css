@@ -322,8 +322,7 @@ th.text-right, td.text-right { text-align: right; }
 #btn-ins-cancelar {
   display: none;
 }
-
-/* === Login Page === */
+/* === Login Page (estilo igual ao dashboard) === */
 body.center {
   min-height: 100vh;
   display: flex;
@@ -345,9 +344,20 @@ body.center {
   animation: fadeIn .6s ease;
 }
 
+.login-logo {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+  padding: 6px;
+  margin-bottom: var(--space-3);
+  box-shadow: 0 0 0 4px var(--brand), var(--shadow-glow);
+}
+
 .login-card h2 {
-  margin-top: var(--space-3);
-  margin-bottom: var(--space-2);
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-1);
 }
 
 .login-card .subtitle {
@@ -356,18 +366,9 @@ body.center {
   margin-bottom: var(--space-4);
 }
 
-.login-logo {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: var(--shadow-glow);
-}
-
 .erro-msg {
   margin-top: var(--space-2);
   font-size: var(--font-sm);
   color: var(--danger) !important;
   min-height: 20px;
 }
-
