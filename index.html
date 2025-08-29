@@ -9,7 +9,9 @@
 <body class="center">
 
   <div class="login-card panel">
-   <img src="https://i.imgur.com/Xy828hk.jpeg" alt="Logo" class="login-logo">
+    <!-- Logo -->
+    <img src="https://i.imgur.com/Xy828hk.jpeg" alt="Logo" class="login-logo">
+
     <h2 class="panel-header">Bem-vindo 👋</h2>
     <p class="subtitle">Acesse sua conta para continuar</p>
 
@@ -25,7 +27,7 @@
       </div>
     </div>
 
-    <p id="login-erro" class="text-muted erro-msg"></p>
+    <p id="login-erro" class="erro-msg"></p>
 
     <div class="actions">
       <button class="btn primary" id="btn-login">Entrar</button>
@@ -57,10 +59,8 @@
       const senha = document.getElementById("login-senha").value;
       const erro = document.getElementById("login-erro");
 
-      // limpa mensagens anteriores
       erro.textContent = "";
 
-      // validação rápida antes de chamar o Firebase
       if (!email || !senha) {
         erro.textContent = "⚠️ Preencha email e senha.";
         return;
@@ -71,7 +71,6 @@
         window.location.href = "dashboard.html";
       } catch (e) {
         console.error("❌ Erro Firebase:", e);
-
         let msg = "Erro desconhecido. Tente novamente.";
         switch (e.code) {
           case "auth/missing-password":
@@ -93,5 +92,3 @@
   </script>
 </body>
 </html>
-
-
