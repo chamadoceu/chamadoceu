@@ -322,6 +322,7 @@ th.text-right, td.text-right { text-align: right; }
 #btn-ins-cancelar {
   display: none;
 }
+
 /* === Login Page === */
 body.center {
   min-height: 100vh;
@@ -333,7 +334,7 @@ body.center {
 }
 
 .login-card {
-  width: 340px;
+  width: 360px;
   text-align: center;
   padding: var(--space-6);
   background: var(--panel);
@@ -341,8 +342,32 @@ body.center {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow-3);
+  animation: fadeIn .6s ease;
 }
 
 .login-card h2 {
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.login-card .subtitle {
+  font-size: var(--font-sm);
+  color: var(--muted);
   margin-bottom: var(--space-4);
 }
+
+.login-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: var(--shadow-glow);
+}
+
+.erro-msg {
+  margin-top: var(--space-2);
+  font-size: var(--font-sm);
+  color: var(--danger) !important;
+  min-height: 20px;
+}
+
