@@ -66,6 +66,7 @@
   // Estado temporário do formulário de receita
   let FORM_RCP_ITENS = [];    // [{insumo, qtd}]
   let EDITING_RECIPE = null;  // nome da receita em edição (ou null)
+  let EDITING_REVENDEDOR = null;  // índice do revendedor em edição (ou null)
 
   // ===== Helpers domínio =====
   const findInsumoByName = (nome) => INSUMOS.find(i => String(i.nome).toLowerCase()===String(nome).toLowerCase());
@@ -223,7 +224,13 @@
     tb.innerHTML = '';
     REVENDEDORES.forEach((r, idx)=>{
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${r.nome}</td><td>${r.contato||'—'}</td><td class="right"><button class="btn ghost" data-del-rev="${idx}">Excluir</button></td>`;
+      tr.innerHTML = `
+      <td>${r.nome}</td>
+      <td>${r.contato||'—'}</td>
+      <td class="right">
+        <button class="btn outline" data-edit-rev="${idx}">Editar</button>
+        <button class="btn ghost" data-del-rev="${idx}">Excluir</button>
+      </td>`;
       tb.appendChild(tr);
     });
     // popular selects
@@ -236,6 +243,9 @@
     ['env-rev','dev-rev'].forEach(id=>{
       const sel = byId(id); if(!sel) return;
       sel.innerHTML='';
+      const opt = document.createElement('option');
+      opt.value=''; opt.disabled = true; opt.selected = true; opt.textContent = 'Selecione Revendedor';
+      sel.appendChild(opt);
       REVENDEDORES.forEach(r=>{ const o=document.createElement('option'); o.value=r.nome; o.textContent=r.nome; sel.appendChild(o); });
     });
   }
@@ -277,6 +287,11 @@
     ['env-prod','dev-prod','vnd-prod'].forEach(id=>{
       const sel = byId(id); if(!sel) return;
       sel.innerHTML='';
+      if (id==='env-prod' || id==='dev-prod'){
+        const opt = document.createElement('option');
+        opt.value=''; opt.disabled = true; opt.selected = true; opt.textContent = 'Selecione Produto';
+        sel.appendChild(opt);
+      }
       list.forEach(p=>{ const o=document.createElement('option'); o.value=p; o.textContent=p; sel.appendChild(o); });
     });
   }
@@ -459,6 +474,12 @@
           byId('ins-qtd').value = '';
           byId('ins-custo').value = '';
           byId('ins-data').value = '';
+
+        // Sempre voltar para estado padrão dos botões
+        const btnCancel = byId('btn-ins-cancelar');
+        if (btnCancel) btnCancel.classList.add('hide');
+        const btnReset = byId('btn-reset-insumo');
+        if (btnReset) btnReset.classList.remove('hide');
         }
       };
     }
@@ -495,9 +516,55 @@
           // Foca no campo quantidade
           byId('ins-qtd').focus();
 
-          return toast(`Recomprando insumo "${it.nome}". Preencha quantidade e custo e clique em Salvar.`);
+          // Mostrar botão cancelar e esconder limpar
+const btnCancelRec = byId('btn-ins-cancelar');
+if (btnCancelRec) btnCancelRec.classList.remove('hide');
+
+const btnResetRec = byId('btn-reset-insumo');
+if (btnResetRec) btnResetRec.classList.add('hide');
+
+toast(`Recomprando insumo "${it.nome}". Preencha quantidade e custo e clique em Salvar.`);
+// Mostrar botão cancelar e esconder o limpar
+    const btnCancel = byId('btn-ins-cancelar');
+    if (btnCancel) btnCancel.classList.remove('hide');
+
+    const btnReset = byId('btn-reset-insumo');
+    if (btnReset) btnReset.classList.add('hide');
         }
       });
+    }
+
+// Handler do botão Cancelar da recompra de insumos (fora do listener da tabela)
+const btnInsCancel = byId('btn-ins-cancelar');
+if (btnInsCancel){
+  btnInsCancel.onclick = ()=>{
+    byId('ins-nome').value = '';
+    byId('ins-un').value = '';
+    byId('ins-qtd').value = '';
+    byId('ins-custo').value = '';
+    byId('ins-data').value = '';
+    btnInsCancel.classList.add('hide'); // volta a esconder
+    const btnReset = byId('btn-reset-insumo');
+    if (btnReset) btnReset.classList.remove('hide'); // volta a mostrar Limpar
+    toast('Recompra cancelada.');
+  };
+}
+
+
+    // Botão LIMPAR (Insumos)
+    const btnResetInsumo = byId('btn-reset-insumo');
+    if (btnResetInsumo){
+      btnResetInsumo.onclick = ()=>{
+        const nome = byId('ins-nome'); if (nome) nome.value='';
+        const un = byId('ins-un'); if (un) un.value='';
+        const dt = byId('ins-data'); if (dt) dt.value='';
+        const qtd = byId('ins-qtd'); if (qtd) qtd.value='';
+        const custo = byId('ins-custo'); if (custo) custo.value='';
+        const btnCancel = byId('btn-ins-cancelar'); if (btnCancel) btnCancel.classList.add('hide');
+        const btnReset = byId('btn-reset-insumo'); if (btnReset) btnReset.classList.remove('hide');
+        toast('Formulário de insumos limpo.');
+        if (nome) nome.focus();
+      };
     }
 
 // Apagar histórico de compras
@@ -652,26 +719,42 @@ if (btnReset) {
         const rend = parseNumber(byId('rec-rend')?.value||'0');
         if (!nome || rend<=0) return toast('Informe nome e rendimento da receita.');
         const itens = FORM_RCP_ITENS.slice();
+        // Se estava editando e mudou o nome → remover a receita antiga
+        if (EDITING_RECIPE && EDITING_RECIPE !== nome){
+          delete RECEITAS[EDITING_RECIPE];
+        }
+
         RECEITAS[nome] = { rend, itens };
         save(LS.receitas, RECEITAS);
-        EDITING_RECIPE = null; FORM_RCP_ITENS = [];
-        byId('btn-rcp-cancelar')?.style && (byId('btn-rcp-cancelar').style.display = 'none');
+
+        EDITING_RECIPE = null; 
+        FORM_RCP_ITENS = [];
+        byId('btn-rcp-cancelar')?.classList.add('hide');
         renderReceitas(); renderRcpItens(); refreshRecipeSelects(); renderDashboard();
         toast('Receita salva!');
+
+        // Limpar campos do formulário de receita
+        const nm = byId('rec-nome'); if (nm) nm.value = '';
+        const rd = byId('rec-rend'); if (rd) rd.value = '';
+        renderRcpItens();
       };
     }
 
     // Cancelar edição
-    const btnCancelR = byId('btn-rcp-cancelar');
-    if (btnCancelR){
-      btnCancelR.onclick = ()=>{
-        EDITING_RECIPE = null; FORM_RCP_ITENS = [];
-        const nm = byId('rec-nome'); const rd = byId('rec-rend');
-        if (nm) nm.value=''; if (rd) rd.value='';
-        btnCancelR.style.display='none';
-        renderRcpItens();
-      };
-    }
+const btnCancelR = byId('btn-rcp-cancelar');
+if (btnCancelR){
+  // garante que ao carregar a página o botão já esteja escondido
+  btnCancelR.classList.add('hide');
+
+  btnCancelR.onclick = ()=>{
+    EDITING_RECIPE = null; FORM_RCP_ITENS = [];
+    const nm = byId('rec-nome'); const rd = byId('rec-rend');
+    if (nm) nm.value=''; if (rd) rd.value='';
+    btnCancelR.classList.add('hide'); // esconde de novo ao cancelar
+    renderRcpItens();
+  };
+}
+
 
     // Delegação: editar/excluir receita
     const tbRec = byId('tb-receitas');
@@ -695,7 +778,7 @@ if (btnReset) {
           const nm = byId('rec-nome'); const rd = byId('rec-rend');
           if (nm) nm.value = nome; if (rd) rd.value = r.rend;
           FORM_RCP_ITENS = (r.itens||[]).map(it=> ({...it}));
-          byId('btn-rcp-cancelar')?.style && (byId('btn-rcp-cancelar').style.display = 'inline-flex');
+          byId('btn-rcp-cancelar')?.classList.remove('hide');
           renderRcpItens();
         }
       });
@@ -717,6 +800,9 @@ if (btnReset) {
         save(LS.prodEstoque, EST_PROD); save(LS.histProd, HIST_PROD);
         renderEstoque(); renderHistProd(); refreshProductSelects(); renderDashboard();
         toast('Produção registrada!');
+	if (recSel) recSel.value = '';
+	byId('prod-qtd').value = '';
+	byId('prod-data').value = '';
       };
     }
 
@@ -746,37 +832,101 @@ if (btnReset) {
         save(LS.vendas, VENDAS); save(LS.prodEstoque, EST_PROD); save(LS.estoqueRev, ESTOQUE_REV);
         renderEstoque(); renderEstoqueRev(); renderVendas(); renderDashboard();
         toast('Venda registrada!');
+// Resetar campos corretamente
+const prodSel = byId('vnd-prod');
+if (prodSel) prodSel.value = '';
+
+const origemSel = byId('vnd-origem');
+if (origemSel) origemSel.value = 'Direto';
+
+byId('vnd-qtd').value = '';
+byId('vnd-preco').value = '';
+byId('vnd-data').value = '';
       };
     }
 
     // Revendedor adicionar / excluir
     const btnRev = byId('btn-rev-salvar');
-    if (btnRev){
-      btnRev.onclick = ()=>{
-        const nome = (byId('rev-nome')?.value||'').trim();
-        const contato = (byId('rev-contato')?.value||'').trim();
-        if (!nome) return toast('Informe o nome do revendedor.');
-        REVENDEDORES.push({nome, contato});
-        save(LS.revendedores, REVENDEDORES);
-        renderRevendedores();
-        toast('Revendedor adicionado!');
-      };
-    }
-    const tbRev = byId('tb-revendedores');
-    if (tbRev){
-      tbRev.addEventListener('click',(ev)=>{
-        const del = ev.target.closest('[data-del-rev]'); if(!del) return;
-        const idx = Number(del.dataset.delRev);
-        const rev = REVENDEDORES[idx]?.nome; if (!rev) return;
-        delete ESTOQUE_REV[rev];
-        REVENDEDORES.splice(idx,1);
-        save(LS.revendedores, REVENDEDORES); save(LS.estoqueRev, ESTOQUE_REV);
-        renderRevendedores(); renderEstoqueRev();
-        toast('Revendedor excluído!');
-      });
+if (btnRev){
+  btnRev.onclick = ()=>{
+    const nome = (byId('rev-nome')?.value||'').trim();
+    const contato = (byId('rev-contato')?.value||'').trim();
+    if (!nome) return toast('Informe o nome do revendedor.');
+
+    if (EDITING_REVENDEDOR !== null){
+      const antigo = REVENDEDORES[EDITING_REVENDEDOR];
+      if (antigo){
+        REVENDEDORES[EDITING_REVENDEDOR] = { nome, contato }
+  
+;
+      }
+      EDITING_REVENDEDOR = null;
+      toast('Revendedor atualizado!');
+    } else {
+      REVENDEDORES.push({nome, contato});
+      toast('Revendedor adicionado!');
     }
 
-    // Envios
+    save(LS.revendedores, REVENDEDORES);
+    renderRevendedores();
+
+    // Limpar formulário
+    byId('rev-nome').value = '';
+    byId('rev-contato').value = '';
+    byId('rev-edit-id').value = '';
+    byId('rev-nome').focus();
+    EDITING_REVENDEDOR = null;
+    byId('btn-rev-cancelar')?.classList.add('hide');
+    byId('btn-rev-limpar')?.classList.remove('hide');
+  };
+}
+    // Delegação de eventos para edição/exclusão de revendedores
+const tbRev = byId('tb-revendedores');
+if (tbRev){
+  tbRev.addEventListener('click',(ev)=>{
+    const del = ev.target.closest('[data-del-rev]');
+    const ed  = ev.target.closest('[data-edit-rev]');
+
+    if (del){
+      const idx = Number(del.dataset.delRev);
+      const rev = REVENDEDORES[idx]?.nome; 
+      if (!rev) return;
+      if (!confirm(`Tem certeza que deseja excluir o revendedor "${rev}"?`)) return;
+      delete ESTOQUE_REV[rev];
+      REVENDEDORES.splice(idx,1);
+      save(LS.revendedores, REVENDEDORES);
+      save(LS.estoqueRev, ESTOQUE_REV);
+      renderRevendedores(); renderEstoqueRev();
+      return toast('Revendedor excluído!');
+    }
+
+    if (ed){
+      const idx = Number(ed.dataset.editRev);
+      const r = REVENDEDORES[idx]; if (!r) return;
+      byId('rev-nome').value = r.nome;
+      byId('rev-contato').value = r.contato || '';
+      EDITING_REVENDEDOR = idx;
+      byId('btn-rev-cancelar')?.classList.remove('hide');
+      byId('btn-rev-limpar')?.classList.add('hide');
+      toast(`Editando revendedor "${r.nome}"`);
+    }
+  });
+}
+
+    
+    // Botão LIMPAR (Revendedores)
+    const btnRevReset = byId('btn-rev-reset');
+    if (btnRevReset){
+      btnRevReset.onclick = ()=>{
+        const n = byId('rev-nome'); if (n) n.value='';
+        const c = byId('rev-contato'); if (c) c.value='';
+        const hid = byId('rev-edit-id'); if (hid) hid.value='';
+        toast('Formulário de revendedores limpo.');
+        if (n) n.focus();
+      };
+    }
+
+// Envios
     const btnEnv = byId('btn-env');
     if (btnEnv){
       btnEnv.onclick = ()=>{
