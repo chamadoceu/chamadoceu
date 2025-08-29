@@ -119,6 +119,16 @@
         </td>`;
       tb.appendChild(tr);
     });
+    // Mostra/oculta mensagem de vazio
+    const empty = byId('insumos-empty');
+    if (empty){
+      if (INSUMOS.length === 0){
+        empty.classList.remove('hide');
+      } else {
+        empty.classList.add('hide');
+      }
+    }
+
     // Popular select de ingredientes na tela de receitas
     const sel = byId('rcp-ins');
     if (sel){
