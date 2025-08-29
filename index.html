@@ -9,7 +9,9 @@
 <body class="center">
 
   <div class="login-card panel">
-    <h2 class="panel-header">🔑 Acessar Conta</h2>
+    <img src="logo.png" alt="Logo" class="login-logo">
+    <h2 class="panel-header">Bem-vindo 👋</h2>
+    <p class="subtitle">Acesse sua conta para continuar</p>
 
     <div class="grid">
       <div class="field">
@@ -23,7 +25,7 @@
       </div>
     </div>
 
-    <p id="login-erro" class="text-muted" style="color:var(--danger); margin-top:var(--space-2)"></p>
+    <p id="login-erro" class="text-muted erro-msg"></p>
 
     <div class="actions">
       <button class="btn primary" id="btn-login">Entrar</button>
@@ -57,7 +59,7 @@
 
       try {
         await auth.signInWithEmailAndPassword(email, senha);
-        window.location.href = "dashboard.html"; // redireciona pro sistema
+        window.location.href = "dashboard.html";
       } catch (e) {
         console.error("❌ Erro:", e);
         erro.textContent = "⚠️ " + e.message;
@@ -66,4 +68,3 @@
   </script>
 </body>
 </html>
-
